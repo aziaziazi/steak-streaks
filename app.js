@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
+const {DateTime, Duration} = require("luxon");
+const humanizeDuration = require("humanize-duration");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -24,6 +26,34 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+function average(values) {
+  const sum = values.reduce((a, b) => a + b, 0);
+  return (sum / values.length) || 0;
+}
+
+function median(values){
+  if(values.length ===0) return 0;
+  values.sort(function(a,b){
+    return a-b;
+  });
+  var half = Math.floor(values.length / 2);
+  if (values.length % 2)
+    return values[half];
+  return (values[half - 1] + values[half]) / 2.0;
+}
+
+// pass luxon's DateTime to pug
+app.use(function (req, res, next) {
+  res.locals = {
+    luxonDateTime: DateTime,
+    luxonDuration: Duration,
+    formattedDuration: t => humanizeDuration(t, { language: "fr", units: ['y', 'mo', 'w', 'd', 'h', 'm'], round: true }),
+    calcMedian: median,
+    calcAverage: average
+  };
+  next();
+});
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -1,18 +1,30 @@
 extends layout
 
 block content
-  h1=user.name
+  h1(style='margin-bottom: 30px')=user.name
 
   if user.steak_dates
-    ul
-      for streak in user.steak_dates
-        li= streak.date
-          form(method='POST' action=user.url+'/puke/'+streak._id style='display: inline'): button(type='submit' style='padding: 0; margin: 0 0 0 10px; background: none; border: 0') 🤮
+    p(style='font-weight: bold; margin: 0')= '💪max: ' + formattedDuration(Math.max(...diffs_with_next))
+    p(style='font-weight: bold; margin: 0')= '⚖️average: ' + formattedDuration(calcAverage(diffs_with_next))
+    p(style='font-weight: bold; margin: 0')= '🧲median: ' + formattedDuration(calcMedian(diffs_with_next))
+
+    ul#steak_dates_list(style='list-style: none; padding: 0')
+      for streak, index in user.steak_dates.reverse()
+        - const thisDate = luxonDateTime.fromJSDate(streak.date);
+        - const lastDate = index != 0 ? luxonDateTime.fromJSDate(user.steak_dates[index - 1].date) : luxonDateTime.local()
+        - const diff = thisDate.diff(lastDate, 'seconds');
+        li
+            if index == 0
+                div
+                    p(style='display: inline; margin: 4px 0; font-weight: bold')= '⏱current: ' + formattedDuration(diff)
+                    form(style='display: inline')#update_form(method="POST" action=user.url + '/eatnow')
+                        button(type='submit' style='background: none;  border: 0; text-decoration: underline; padding: 0 0 0 10px') 🥩 eat
+            else
+                p(style='display: block; margin: 4px 0')= formattedDuration(diff)
+            p.formatted_date(style='display: inline; margin: 0', data-date=streak.date )='├ ' + streak.formatted_date
+            form(method='POST' action=user.url+'/puke/'+streak._id style='display: inline'): button(type='submit' style='padding: 0; margin: 0 0 0 10px; background: none; border: 0;display: inline') 🤮
   else
     p no streaks yet !
-
-  form#update_form(method="POST" action=user.url+'/eatnow')
-    button(type='submit' style='font-size:40px; background: none;  border: 0') 🥩
 
   if errors
     ul

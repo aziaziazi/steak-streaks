@@ -1,3 +1,4 @@
+const {DateTime} = require("luxon");
 const {body, validationResult} = require("express-validator");
 var User = require('../models/user');
 
@@ -7,7 +8,6 @@ exports.index = function(req, res, next) {
     .find()
     .sort([['name', 'ascending']])
     .exec((err, usersList) => {
-      console.log('usersList =>', usersList)
       return err
         ? next(err)
         : res.render('users_list', {usersList})
@@ -46,7 +46,7 @@ exports.user_delete_post = function(req, res, next) {
 
 exports.user_eatNow_post = function(req, res, next) {
   const userID = req.params.id;
-  const now = new Date()
+  const now = DateTime.local();
 
   User
     .updateOne(
@@ -87,6 +87,17 @@ exports.user_detail_get = function(req, res, next) {
         return next(err)
       }
 
-      res.render('user_detail', {user})
+
+      const diffs_with_next = user.steak_dates.map((steakDate, index) => {
+        const thisDate = DateTime.fromJSDate(steakDate.date);
+        const nextDate = user.steak_dates[index + 1]
+          ? DateTime.fromJSDate(user.steak_dates[index + 1].date)
+          : DateTime.local()
+
+        return nextDate.diff(thisDate, 'milliseconds').milliseconds;
+      })
+      console.log('diffs_with_next =>', diffs_with_next)
+      console.log('Math.max(diffs_with_next) =>', Math.max(...diffs_with_next))
+      res.render('user_detail', {user, diffs_with_next})
     })
 }
