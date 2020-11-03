@@ -8,6 +8,8 @@ block content
     p(style='font-weight: bold; margin: 0')= '⚖️average: ' + formattedDuration(calcAverage(diffs_with_next))
     p(style='font-weight: bold; margin: 0')= '🧲median: ' + formattedDuration(calcMedian(diffs_with_next))
 
+    form(style='display: inline')#update_form(method="POST" action=user.url + '/eatnow')
+        button(type='submit' style='background: none;  border: 0; text-decoration: underline; padding: 0') 🥩 eat
     ul#steak_dates_list(style='list-style: none; padding: 0')
       for streak, index in user.steak_dates.reverse()
         - const thisDate = luxonDateTime.fromJSDate(streak.date);
@@ -15,10 +17,7 @@ block content
         - const diff = thisDate.diff(lastDate, 'seconds');
         li.listEl
             if index == 0
-                div
-                    p(style='display: inline; margin: 4px 0; font-weight: bold')= '⏱current: ' + formattedDuration(diff)
-                    form(style='display: inline')#update_form(method="POST" action=user.url + '/eatnow')
-                        button(type='submit' style='background: none;  border: 0; text-decoration: underline; padding: 0 0 0 10px') 🥩 eat
+                p(style='display: block; margin: 4px 0; font-weight: bold')= '⏱current: ' + formattedDuration(diff)
             else
                 p(style='display: block; margin: 4px 0')= formattedDuration(diff)
             p.formatted_date(style='display: inline; margin: 0', data-date=streak.date )='├ ' + streak.formatted_date
