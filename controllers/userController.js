@@ -41,7 +41,11 @@ exports.user_create_post = [
 ]
 
 exports.user_delete_post = function(req, res, next) {
-  res.send('NOT IMPLEMENTED: user_delete_post');
+  User
+    .findByIdAndRemove(req.params.id, (err) => {
+    if (err) { return next(err)}
+    res.redirect('/users/')
+  })
 }
 
 exports.user_eatNow_post = function(req, res, next) {
@@ -96,8 +100,7 @@ exports.user_detail_get = function(req, res, next) {
 
         return nextDate.diff(thisDate, 'milliseconds').milliseconds;
       })
-      console.log('diffs_with_next =>', diffs_with_next)
-      console.log('Math.max(diffs_with_next) =>', Math.max(...diffs_with_next))
+
       res.render('user_detail', {user, diffs_with_next})
     })
 }

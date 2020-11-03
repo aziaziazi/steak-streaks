@@ -1,31 +1,38 @@
 extends layout
 
 block content
-  h1(style='margin-bottom: 30px')=user.name
+    h1(style='margin-bottom: 30px')=user.name
 
-  if user.steak_dates
-    p(style='font-weight: bold; margin: 0')= '💪max: ' + formattedDuration(Math.max(...diffs_with_next))
-    p(style='font-weight: bold; margin: 0')= '⚖️average: ' + formattedDuration(calcAverage(diffs_with_next))
-    p(style='font-weight: bold; margin: 0')= '🧲median: ' + formattedDuration(calcMedian(diffs_with_next))
+    button#delete_user(onclick="document.getElementById('delete_user_confirm').classList.remove('hide');document.getElementById('delete_user').classList.add('hide')") ❌
+    div#delete_user_confirm.hide
+        p= "Are your sure you want to delete " + user.name + ' ?'
+        form(method='POST' action=user.url + '/delete' style='display: inline'): button(type='submit' style='display: inline; margin: 0 10px 0 0') 🗑 Yes, go away
+        button(onclick="document.getElementById('delete_user').classList.remove('hide');document.getElementById('delete_user_confirm').classList.add('hide')") 😅 No, keep safe
 
-    form(style='display: inline')#update_form(method="POST" action=user.url + '/eatnow')
-        button(type='submit' style='background: none;  border: 0; text-decoration: underline; padding: 0') 🥩 eat
-    ul#steak_dates_list(style='list-style: none; padding: 0')
-      for streak, index in user.steak_dates.reverse()
-        - const thisDate = luxonDateTime.fromJSDate(streak.date);
-        - const lastDate = index != 0 ? luxonDateTime.fromJSDate(user.steak_dates[index - 1].date) : luxonDateTime.local()
-        - const diff = thisDate.diff(lastDate, 'seconds');
-        li.listEl
-            if index == 0
-                p(style='display: block; margin: 4px 0; font-weight: bold')= '⏱current: ' + formattedDuration(diff)
-            else
-                p(style='display: block; margin: 4px 0')= formattedDuration(diff)
-            p.formatted_date(style='display: inline; margin: 0', data-date=streak.date )='├ ' + streak.formatted_date
-            form.puke_form(method='POST' action=user.url+'/puke/'+streak._id style='display: inline'): button(type='submit' style='padding: 0; margin: 0 0 0 10px; background: none; border: 0;display: inline') 🤮
-  else
-    p no streaks yet !
+    if user.steak_dates
+        div(style='margin-top: 30px')
+            p(style='font-weight: bold; margin: 0')= '💪max: ' + formattedDuration(Math.max(...diffs_with_next))
+            p(style='font-weight: bold; margin: 0')= '⚖️average: ' + formattedDuration(calcAverage(diffs_with_next))
+            p(style='font-weight: bold; margin: 0')= '🧲median: ' + formattedDuration(calcMedian(diffs_with_next))
 
-  if errors
-    ul
-      for error in errors
-        li!= error.msg
+        form(style='display: inline')#update_form(method="POST" action=user.url + '/eatnow')
+            button(type='submit') 🐮🥩 eat an animal dead body
+        ul#steak_dates_list(style='list-style: none; padding: 0')
+            for streak, index in user.steak_dates.reverse()
+                - const thisDate = luxonDateTime.fromJSDate(streak.date);
+                - const lastDate = index != 0 ? luxonDateTime.fromJSDate(user.steak_dates[index - 1].date) : luxonDateTime.local()
+                - const diff = thisDate.diff(lastDate, 'seconds');
+                li.listEl
+                    if index == 0
+                        p(style='display: block; margin: 4px 0; font-weight: bold')= '⏱current: ' + formattedDuration(diff)
+                    else
+                        p(style='display: block; margin: 4px 0')= formattedDuration(diff)
+                    p.formatted_date(style='display: inline; margin: 0', data-date=streak.date )='├ ' + streak.formatted_date
+                    form.puke_form(method='POST' action=user.url+'/puke/'+streak._id style='display: inline'): button(type='submit' style='display: inline') 🤮
+    else
+        p no streaks yet !
+
+    if errors
+        ul
+            for error in errors
+                li!= error.msg

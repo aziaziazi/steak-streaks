@@ -10,6 +10,25 @@ a {
 }
 
 button {
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  padding: 0;
+}
+
+#delete_user_confirm {
+  margin-bottom: 10px;
+}
+
+#delete_user_confirm p {
+  margin: 0;
+}
+
+.hide {
+  display: none;
+}
+
+button {
   cursor: pointer;
 }
 
@@ -19,4 +38,13 @@ button {
 
 .listEl:hover .puke_form {
   opacity: 1;
+}
+
+
+body {
+  background: #100505;
+}
+
+p, button, h1, a {
+  color: #ddeedd;
 }
