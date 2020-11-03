@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1=user.name
+
+  if user.steak_dates
+    ul
+      for streak in user.steak_dates
+        li= streak.date
+          form(method='POST' action=user.url+'/puke/'+streak._id style='display: inline'): button(type='submit' style='padding: 0; margin: 0 0 0 10px; background: none; border: 0') 🤮
+  else
+    p no streaks yet !
+
+  form#update_form(method="POST" action=user.url+'/eatnow')
+    button(type='submit' style='font-size:40px; background: none;  border: 0') 🥩
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

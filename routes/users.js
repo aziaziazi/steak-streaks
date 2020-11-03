@@ -11,7 +11,9 @@ router.post('/create', user_controller.user_create_post);
 
 router.post('/:id/delete', user_controller.user_delete_post);
 
-router.post('/:id/update', user_controller.user_update_post);
+router.post('/:id/eatnow', user_controller.user_eatNow_post);
+
+router.post('/:id/puke/:pukeId', user_controller.user_puke_post);
 
 router.get('/:id', user_controller.user_detail_get);
 

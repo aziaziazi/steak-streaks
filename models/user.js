@@ -1,5 +1,4 @@
 var { DateTime } = require('luxon');
-
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
@@ -7,9 +6,18 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema(
   {
     name: {type: String, required: true, maxlength: 100},
-    steak_dates: [Date],
+    steak_dates: [{
+      date: {type: Date, required: true}
+    }]
   }
 );
+
+// Virtual for user's url
+UserSchema
+  .virtual('url')
+  .get(function () {
+    return '/users/' + this._id;
+  });
 
 // Virtual for user's streaks
 UserSchema
@@ -27,4 +35,5 @@ UserSchema
     })
   });
 
-module.exports = mongoose.model('Author', UserSchema);
+
+module.exports = mongoose.model('user', UserSchema);

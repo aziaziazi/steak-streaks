@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 Steak Streak
+
+  ul
+    each user in usersList
+      li
+        a(href=user.url) #{user.name}
+    else
+      li There are no users yet
+
+  a(href='users/create') new user
+
