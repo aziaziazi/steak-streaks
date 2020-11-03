@@ -8,3 +8,15 @@ body {
 a {
   color: #00B7FF;
 }
+
+button {
+  cursor: pointer;
+}
+
+.puke_form {
+  opacity: 0;
+}
+
+.listEl:hover .puke_form {
+  opacity: 1;
+}

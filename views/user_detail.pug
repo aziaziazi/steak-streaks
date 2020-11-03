@@ -13,7 +13,7 @@ block content
         - const thisDate = luxonDateTime.fromJSDate(streak.date);
         - const lastDate = index != 0 ? luxonDateTime.fromJSDate(user.steak_dates[index - 1].date) : luxonDateTime.local()
         - const diff = thisDate.diff(lastDate, 'seconds');
-        li
+        li.listEl
             if index == 0
                 div
                     p(style='display: inline; margin: 4px 0; font-weight: bold')= '⏱current: ' + formattedDuration(diff)
@@ -22,7 +22,7 @@ block content
             else
                 p(style='display: block; margin: 4px 0')= formattedDuration(diff)
             p.formatted_date(style='display: inline; margin: 0', data-date=streak.date )='├ ' + streak.formatted_date
-            form(method='POST' action=user.url+'/puke/'+streak._id style='display: inline'): button(type='submit' style='padding: 0; margin: 0 0 0 10px; background: none; border: 0;display: inline') 🤮
+            form.puke_form(method='POST' action=user.url+'/puke/'+streak._id style='display: inline'): button(type='submit' style='padding: 0; margin: 0 0 0 10px; background: none; border: 0;display: inline') 🤮
   else
     p no streaks yet !
 
