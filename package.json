@@ -1,11 +1,11 @@
 {
-  "name": "steak-streak",
+  "name": "steak-streaks",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
-    "serverstart": "DEBUG=steak-streak:* npm run devstart"
+    "serverstart": "DEBUG=steak-streaks:* npm run devstart"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
